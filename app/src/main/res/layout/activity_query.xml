@@ -4,9 +4,36 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/et_city"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="搜索全国城市"/>
+        android:layout_height="180dp"
+        android:background="@mipmap/edit_background1">
+
+        <ImageButton
+            android:id="@+id/ib_cancel"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@mipmap/icon_cancel" />
+
+        <EditText
+            android:id="@+id/et_city"
+            android:layout_width="220dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="90dp"
+            android:background="#fff"
+            android:hint="   搜索全国城市" />
+
+        <ImageButton
+            android:id="@+id/ib_query"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="90dp"
+            android:layout_toRightOf="@id/et_city"
+            android:background="#0099ff"
+            android:src="@mipmap/icon_query1" />
+    </RelativeLayout>
+
 </LinearLayout>

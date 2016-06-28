@@ -2,19 +2,113 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:background="#7ebdf7"
+    android:orientation="vertical"
+    android:weightSum="1">
 
-    <ImageView
-        android:id="@+id/iv_add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@mipmap/ic_launcher" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <ImageButton
+            android:id="@+id/iv_add"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@mipmap/icon_home" />
+
+        <TextView
+            android:id="@+id/tv_area"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="2dp"
+            android:gravity="center_vertical"
+            android:text="地区"
+            android:textColor="#fff"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="date"
+            android:textColor="#fff"
+            android:textSize="15sp"
+            android:layout_marginBottom="5dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
+
+        <ImageButton
+            android:id="@+id/ib_share"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@mipmap/icon_share" />
+    </RelativeLayout>
+
 
     <TextView
-        android:id="@+id/textview"
+        android:layout_marginTop="20dp"
+        android:id="@+id/tv_updatetime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="main" />
+        android:layout_gravity="center"
+        android:text="update"
+        android:textColor="#fff"
+        android:textSize="15sp"/>
+
+    <TextView
+        android:layout_marginTop="60dp"
+        android:id="@+id/tv_weather"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="weather"
+        android:textColor="#fff"
+        android:textSize="30sp"/>
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:id="@+id/tv_temp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="temp"
+        android:textColor="#fff"
+        android:textSize="35sp"/>
+
+   <!-- <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" Text"
+        android:id="@+id/textView"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.48" />-->
+
+
+        <GridView
+            android:id="@+id/gv_forcast"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:numColumns="6"
+            android:verticalSpacing="10dp"
+            android:layout_height="140dp"/>
+
+    <GridView
+        android:gravity="center"
+        android:id="@+id/gv_index"
+        android:layout_marginTop="0dp"
+        android:layout_width="match_parent"
+        android:numColumns="2"
+        android:verticalSpacing="10dp"
+        android:layout_height="100dp"/>
+
+
 
 </LinearLayout>

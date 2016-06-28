@@ -18,6 +18,8 @@
 
         <activity android:name=".activity.WeatherActivity"/>
         <activity android:name=".activity.AddAreaActivity"/>
+        <activity android:name=".activity.QueryActivity"/>
     </application>
 
+    <uses-permission android:name="android.permission.INTERNET"/>
 </manifest>
