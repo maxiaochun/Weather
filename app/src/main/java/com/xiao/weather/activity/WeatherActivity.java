@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +19,7 @@ import com.xiao.weather.R;
 import com.xiao.weather.db.Bean;
 import com.xiao.weather.db.ForcastListBean;
 import com.xiao.weather.db.WeatherBean;
+import com.xiao.weather.db.WeatherDao;
 import com.xiao.weather.util.ConstantValue;
 import com.xiao.weather.util.HttpUtil;
 import com.xiao.weather.util.SpUtil;
@@ -31,7 +33,7 @@ import java.util.List;
 /**
  * Created by hasee on 2016/6/26.
  */
-public class WeatherActivity extends Activity {
+public class WeatherActivity extends Activity implements View.OnClickListener {
 
     private TextView mContent;
     private ImageView mAdd;
@@ -51,14 +53,17 @@ public class WeatherActivity extends Activity {
     private TextView mTest;
     private List<Bean.RetDataBean.ForecastBean> forecast;
     private ArrayList<ForcastListBean> beanArrayList;
-
+    private GridView mIndex;
+    private String[] indexValues;
+    private int[] imageIDs;
+    private String[] indexItem;
+    private ImageButton mShare;
 
     //第一次连接服务器，返回当天天气信息及城市码
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            Toast.makeText(WeatherActivity.this, "更新成功", Toast.LENGTH_SHORT).show();
             Bundle data = msg.getData();
             //得到json数据
             String content = data.getString("content");
@@ -73,7 +78,7 @@ public class WeatherActivity extends Activity {
                 mArea.setText(bean.getCity());
                 mWeather.setText(bean.getWeather());
                 mDate.setText(bean.getDate());
-                mTemp.setText(bean.getL_tmp() + "℃~" + bean.getH_tmp() + "℃");
+                mTemp.setText(bean.getL_tmp() + "°~" + bean.getH_tmp() + "°");
 
                 //第2次连接服务器
                 String citycode = bean.getCitycode();
@@ -97,14 +102,12 @@ public class WeatherActivity extends Activity {
             //第二次解析数据
             processData();
             mGridView.setAdapter(new MyAdapter());
-//            mIndex.setAdapter(new IndexAdapter());
+            mIndex.setAdapter(new IndexAdapter());
 
+            Toast.makeText(WeatherActivity.this, "更新成功", Toast.LENGTH_SHORT).show();
         }
     };
-    private GridView mIndex;
-    private String[] indexValues;
-    private int[] imageIDs;
-    private String[] indexItem;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,18 +117,16 @@ public class WeatherActivity extends Activity {
         initView();
         initData();
 
-        mAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), AddAreaActivity.class));
-            }
-        });
+        mAdd.setOnClickListener(this);
+        mShare.setOnClickListener(this);
+
 
     }
 
     private void initView() {
 
-        mAdd = (ImageView) findViewById(R.id.iv_add);
+        mAdd = (ImageButton) findViewById(R.id.ib__weather_add);
+        mShare = (ImageButton) findViewById(R.id.ib_share);
         mArea = (TextView) findViewById(R.id.tv_area);
         mDate = (TextView) findViewById(R.id.tv_date);
         mWeather = (TextView) findViewById(R.id.tv_weather);
@@ -139,31 +140,58 @@ public class WeatherActivity extends Activity {
     private void initData() {
         //从sp中获取area数据
         area = SpUtil.getString(getApplicationContext(), ConstantValue.AREA, "");
-        String url = UrlUtil.http + area;
-        //第一次获取数据
-        HttpUtil.getDataFromService(url, handler);
+        if (!area.isEmpty()) {
+            String url = UrlUtil.http + area;
+            //第一次获取数据
+            HttpUtil.getDataFromService(url, handler);
+        }
+
     }
 
     //第一次解析数据
     private void parserData(JSONObject json) {
 
+
+        bean = new WeatherBean();
+
         try {
-            bean = new WeatherBean();
+            //返回数据中ErrNum为0表示有该城市数据，-1表示没有找到该城市
+            int errNum = json.getInt("errNum");
+            if (errNum == -1) {
+                Toast.makeText(WeatherActivity.this, "该城市信息不存在，请重新选择！",Toast.LENGTH_SHORT).show();
+                //修改sp中数据（否则下次启动有异常）
+                String default_area = SpUtil.getString(
+                        getApplicationContext(), ConstantValue.DEFAULTAREA, "");//获取默认地区
 
-            JSONObject basic = json.getJSONObject("retData");
+                SpUtil.putString(getApplicationContext(), ConstantValue.AREA, default_area);//将默认地区设置为查询地区
 
-            bean.setCity(basic.getString("city"));
-            bean.setTime(basic.getString("time"));
-            bean.setWeather(basic.getString("weather"));
-            bean.setDate(basic.getString("date"));
-            bean.setH_tmp(basic.getString("h_tmp"));
-            bean.setL_tmp(basic.getString("l_tmp"));
-            bean.setSunrise(basic.getString("sunrise"));
-            bean.setSunset(basic.getString("sunset"));
-            bean.setWD(basic.getString("WD"));
-            bean.setWS(basic.getString("WS"));
-            bean.setCitycode(basic.getString("citycode"));
+                startActivity(new Intent(getApplicationContext(), QueryActivity.class));
+                finish();
+            } else if (errNum == 0) {
+                //该地区信息存在，判断如果数据库中没有该城市，则添加到数据库
+                //获取操作数据库的对象
+                WeatherDao weatherDao = WeatherDao.getInstance(getApplicationContext());
 
+                boolean contains = weatherDao.findAll().contains(area);
+                if (contains == false) {//数据库中不包括该城市
+                    //增加该城市到数据库
+                    weatherDao.insert(area);
+                    SpUtil.putString(getApplicationContext(),ConstantValue.DEFAULTAREA,area);//将该数据（即最新数据作为默认区域）
+                }
+                //标记不是第一次登陆
+                SpUtil.putBoolean(getApplicationContext(), ConstantValue.IS_FIRST_LOAD, false);
+
+                JSONObject basic = json.getJSONObject("retData");
+
+                bean.setCity(basic.getString("city"));
+                bean.setTime(basic.getString("time"));
+                bean.setWeather(basic.getString("weather"));
+                bean.setDate(basic.getString("date"));
+                bean.setH_tmp(basic.getString("h_tmp"));
+                bean.setL_tmp(basic.getString("l_tmp"));
+                bean.setSunset(basic.getString("sunset"));
+                bean.setCitycode(basic.getString("citycode"));
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -220,9 +248,23 @@ public class WeatherActivity extends Activity {
         String chuanyi = index.get(2).getIndex();//穿衣指数
         String yundong = index.get(3).getIndex();//运动指数
 
-        indexItem = new String[]{"感冒指数","紫外线","穿衣指数","运动指数"};
+        indexItem = new String[]{"感冒指数", "日晒强度", "穿衣指数", "运动指数"};
         indexValues = new String[]{ganmao, ziwaixian, chuanyi, yundong};
-        imageIDs = new int[]{R.mipmap.icon_gaomao,R.mipmap.icon_ziwaixian,R.mipmap.icon_chuanyi,R.mipmap.icon_yundong};
+        imageIDs = new int[]{R.mipmap.icon_gaomao, R.mipmap.icon_ziwaixian, R.mipmap.icon_chuanyi, R.mipmap.icon_yundong};
+
+    }
+
+    //按钮点击事件
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.ib__weather_add:
+                startActivity(new Intent(getApplicationContext(), AddAreaActivity.class));
+                break;
+            case R.id.ib_share:
+                //分享信息
+
+        }
 
     }
 
@@ -260,8 +302,8 @@ public class WeatherActivity extends Activity {
             String lowtemp = beanArrayList.get(i).getLowtemp();
             String mLowtemp = lowtemp.substring(0, 2);
             String hightemp = beanArrayList.get(i).getHightemp();
-            String mHightemp = lowtemp.substring(0,2);
-            mTemp.setText( mLowtemp+ "°/" + mHightemp+"°");
+            String mHightemp = hightemp.substring(0, 2);
+            mTemp.setText(mLowtemp + "°/" + mHightemp + "°");
 
             String type = beanArrayList.get(i).getType();
             mType.setText(type);
@@ -288,7 +330,7 @@ public class WeatherActivity extends Activity {
         }
     }
 
-  /*  private class IndexAdapter extends BaseAdapter {
+    private class IndexAdapter extends BaseAdapter {
         @Override
         public int getCount() {
             return indexValues.length;
@@ -306,15 +348,19 @@ public class WeatherActivity extends Activity {
 
         @Override
         public View getView(int i, View convertView, ViewGroup viewGroup) {
-            View view = View.inflate(getApplicationContext(),R.layout.index_item,null);
-            ImageView mIndexImage = (ImageView) view.findViewById(R.id.iv_index_img);
-            TextView indexView = (TextView) view.findViewById(R.id.tv_index);
-            TextView itemView = (TextView) view.findViewById(R.id.tv_item);
+            View view = View.inflate(getApplicationContext(), R.layout.myindex_item, null);
+            ImageView iv_index_img = (ImageView) view.findViewById(R.id.iv_index_img);
+            TextView tv_index_value = (TextView) view.findViewById(R.id.tv_index_value);
+            TextView tv_index_type = (TextView) view.findViewById(R.id.tv_index_type);
 
-            mIndexImage.setBackgroundResource(imageIDs[i]);
-            indexView.setText(indexValues[i]);
-            itemView.setText(indexItem[i]);
+            iv_index_img.setBackgroundResource(imageIDs[i]);
+            if (!indexValues[i].isEmpty()) {
+                tv_index_value.setText(indexValues[i]);
+            } else {
+                tv_index_value.setText("正常");
+            }
+            tv_index_type.setText(indexItem[i]);
             return view;
         }
-    }*/
+    }
 }

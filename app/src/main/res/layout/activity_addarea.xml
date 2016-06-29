@@ -9,41 +9,45 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/blue"
-        android:paddingTop="10dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingTop="10dp">
 
         <ImageButton
+            android:id="@+id/iv_back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_marginLeft="10dp"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:id="@+id/iv_back"
-        android:background="@mipmap/icon_back"/>
+            android:background="@mipmap/icon_back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="3dp"
+            android:layout_toRightOf="@+id/iv_back"
+            android:text="城市管理"
+            android:textColor="#fff"
+            android:textSize="20sp" />
 
         <ImageButton
+            android:id="@+id/ib_addarea_add"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:id="@+id/iv_edit"
-            android:background="@mipmap/icon_edit"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
-            android:layout_toStartOf="@+id/iv_add"
-            android:layout_marginEnd="37dp" />
-
-        <ImageButton
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:id="@+id/iv_add"
-            android:background="@mipmap/icon_add"
             android:layout_gravity="right"
             android:layout_marginRight="10dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true" />
+            android:background="@mipmap/icon_add" />
 
     </RelativeLayout>
 
     <ListView
         android:id="@+id/area_list"
         android:layout_width="match_parent"
-        android:layout_height="0dp">
+        android:layout_height="0dp"
+        android:layout_margin="10dp"
+        android:layout_weight="1"
+        android:dividerHeight="1dp">
 
     </ListView>
 

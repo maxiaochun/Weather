@@ -9,8 +9,11 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.xiao.weather.R;
+import com.xiao.weather.util.ConstantValue;
+import com.xiao.weather.util.SpUtil;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -18,7 +21,8 @@ public class SplashActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-       this. requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+       this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
@@ -55,8 +59,18 @@ public class SplashActivity extends AppCompatActivity {
             //动画结束后，跳转至主页面
             @Override
             public void onAnimationEnd(Animation animation) {
+            //判断是否是第一次登陆
+                boolean isFirst = SpUtil.getBoolean(getApplicationContext(), ConstantValue.IS_FIRST_LOAD, true);
 
-                startActivity(new Intent(getApplicationContext(),WeatherActivity.class));
+                //设置默认城市
+                SpUtil.putString(getApplicationContext(),ConstantValue.DEFAULTAREA,"北京");
+                if (isFirst == false){
+                    startActivity(new Intent(getApplicationContext(),WeatherActivity.class));
+                }else {
+                    Toast.makeText(SplashActivity.this, "请选择城市", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getApplicationContext(),QueryActivity.class));
+                }
+                finish();
             }
 
             @Override

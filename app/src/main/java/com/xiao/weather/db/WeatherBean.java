@@ -8,13 +8,13 @@ public class WeatherBean {
     private String city;
     private String time;//更新时间
     private String weather;//天气
-    private String tmp;//温度
-    private String WD;//风向
-    private String WS;//风力
+//    private String tmp;//温度
+//    private String WD;//风向
+//    private String WS;//风力
     private String h_tmp;//最高温度
     private String l_tmp;//最低温度
     private String date;//日期
-    private String sunrise;//日出时间
+//    private String sunrise;//日出时间
     private String citycode;//城市代码
 
 
@@ -52,30 +52,6 @@ public class WeatherBean {
         this.weather = weather;
     }
 
-    public String getTmp() {
-        return tmp;
-    }
-
-    public void setTmp(String tmp) {
-        this.tmp = tmp;
-    }
-
-    public String getWD() {
-        return WD;
-    }
-
-    public void setWD(String WD) {
-        this.WD = WD;
-    }
-
-    public String getWS() {
-        return WS;
-    }
-
-    public void setWS(String WS) {
-        this.WS = WS;
-    }
-
     public String getH_tmp() {
         return h_tmp;
     }
@@ -98,14 +74,6 @@ public class WeatherBean {
 
     public void setDate(String date) {
         this.date = date;
-    }
-
-    public String getSunrise() {
-        return sunrise;
-    }
-
-    public void setSunrise(String sunrise) {
-        this.sunrise = sunrise;
     }
 
     public String getSunset() {

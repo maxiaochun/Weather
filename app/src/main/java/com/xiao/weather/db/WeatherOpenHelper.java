@@ -9,12 +9,14 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class WeatherOpenHelper extends SQLiteOpenHelper{
 
-    public WeatherOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, name, factory, version);
+    public WeatherOpenHelper(Context context) {
+        super(context, "addarea.db", null, 1);//创建数据库
     }
 
     @Override
-    public void onCreate(SQLiteDatabase sqLiteDatabase) {
+    public void onCreate(SQLiteDatabase db) {
+        //创建数据库中的表
+        db.execSQL("create table area(_id integer primary key autoincrement,area varcher(20));");
 
     }
 

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.xiao.weather.R;
 import com.xiao.weather.util.ConstantValue;
@@ -20,6 +19,7 @@ public class QueryActivity extends Activity{
     private ImageButton mCancel;
     private ImageButton mQuery;
     private EditText mEditText;
+    private String mAddArea;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +31,16 @@ public class QueryActivity extends Activity{
         mQuery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String mAddArea = mEditText.getText().toString();//editText数据
-                SpUtil.putString(getApplicationContext(), ConstantValue.AREA,mAddArea);
-                Toast.makeText(QueryActivity.this, "添加成功", Toast.LENGTH_SHORT).show();
+
+                //editText数据
+                mAddArea = mEditText.getText().toString();
+
+                //全部地区数据库比对。。。。。
+
+                SpUtil.putString(getApplicationContext(), ConstantValue.AREA, mAddArea);
+//                Toast.makeText(QueryActivity.this, "添加成功", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(getApplicationContext(),WeatherActivity.class));
+
             }
         });
 

@@ -36,4 +36,29 @@ public class SpUtil {
        return sp.getString(key,defValue);
     }
 
+    /**
+     * 写入int数据到SharePreference
+     * @param ctx
+     * @param key
+     * @param value
+     */
+    public static void putBoolean(Context ctx ,String key,boolean value){
+        if (sp == null){
+            sp = ctx.getSharedPreferences("config",Context.MODE_PRIVATE);
+        }
+        sp.edit().putBoolean(key,value).commit();
+    }
+
+    /**
+     * 读取int数据从SharePreference
+     * @param ctx
+     * @param key
+     * @param defValue
+     */
+    public static boolean getBoolean(Context ctx ,String key,boolean defValue){
+        if (sp == null){
+            sp = ctx.getSharedPreferences("config",Context.MODE_PRIVATE);
+        }
+        return sp.getBoolean(key,defValue);
+    }
 }

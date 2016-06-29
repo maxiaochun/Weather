@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#7ebdf7"
+    android:background="#4e94d5"
     android:orientation="vertical"
     android:weightSum="1">
 
@@ -11,7 +11,7 @@
         android:layout_height="50dp">
 
         <ImageButton
-            android:id="@+id/iv_add"
+            android:id="@+id/ib__weather_add"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginLeft="10dp"
@@ -83,31 +83,28 @@
         android:textColor="#fff"
         android:textSize="35sp"/>
 
-   <!-- <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=" Text"
-        android:id="@+id/textView"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="0.48" />-->
 
 
-        <GridView
-            android:id="@+id/gv_forcast"
-            android:layout_marginTop="20dp"
-            android:layout_width="match_parent"
-            android:numColumns="6"
-            android:verticalSpacing="10dp"
-            android:layout_height="140dp"/>
 
-    <GridView
-        android:gravity="center"
-        android:id="@+id/gv_index"
-        android:layout_marginTop="0dp"
-        android:layout_width="match_parent"
-        android:numColumns="2"
-        android:verticalSpacing="10dp"
-        android:layout_height="100dp"/>
+      <GridView
+          android:id="@+id/gv_forcast"
+          android:layout_marginTop="60dp"
+          android:layout_width="match_parent"
+          android:numColumns="6"
+          android:verticalSpacing="10dp"
+          android:layout_height="140dp"/>
+
+      <GridView
+          android:paddingLeft="20dp"
+          android:id="@+id/gv_index"
+          android:layout_marginTop="0dp"
+          android:layout_width="match_parent"
+          android:numColumns="2"
+          android:verticalSpacing="10dp"
+          android:layout_height="140dp"/>
+
+
+
 
 
 
